@@ -1,12 +1,12 @@
 /*
- * schoolRISCV - small RISC-V CPU 
+ * schoolRISCV - small RISC-V CPU
  *
- * originally based on Sarah L. Harris MIPS CPU 
+ * originally based on Sarah L. Harris MIPS CPU
  *                   & schoolMIPS project
- * 
- * Copyright(c) 2017-2020 Stanislav Zhelnio 
- *                        Aleksandr Romanov 
- */ 
+ *
+ * Copyright(c) 2017-2020 Stanislav Zhelnio
+ *                        Aleksandr Romanov
+ */
 
 //hardware top level module
 module sm_top
@@ -39,6 +39,22 @@ module sm_top
         .clkOut     ( clk       )
     );
 
+    wire            lruWrite;
+    wire            lruRead;
+    wire    [2:0]   lruAddr;
+    wire    [7:0]   lruOut;
+    wire    [7:0]   lruIn;
+
+    lru lru (
+        .clk        ( clk       ),
+        .rst_n      ( rst_n     ),
+        .in         ( lruIn     ),
+        .read       ( lruRead   ),
+        .write      ( lruWrite  ),
+        .out        ( lruOut    ),
+        .addr       ( lruAddr   )
+    );
+
     //instruction memory
     wire    [31:0]  imAddr;
     wire    [31:0]  imData;
@@ -51,7 +67,12 @@ module sm_top
         .regAddr    ( addr      ),
         .regData    ( regData   ),
         .imAddr     ( imAddr    ),
-        .imData     ( imData    )
+        .imData     ( imData    ),
+        .lruWrite   ( lruWrite  ),
+        .lruRead    ( lruRead   ),
+        .lruAddr    ( lruAddr   ),
+        .lruOut     ( lruOut    ),
+        .lruIn      ( lruIn     )
     );
 
 endmodule
@@ -92,6 +113,6 @@ module sm_clk_divider
     wire [31:0] cntrNext = cntr + 1;
     sm_register_we r_cntr(clkIn, rst_n, enable, cntrNext, cntr);
 
-    assign clkOut = bypass ? clkIn 
+    assign clkOut = bypass ? clkIn
                            : cntr[shift + divide];
 endmodule

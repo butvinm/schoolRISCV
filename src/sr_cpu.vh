@@ -1,12 +1,12 @@
 /*
- * schoolRISCV - small RISC-V CPU 
+ * schoolRISCV - small RISC-V CPU
  *
- * originally based on Sarah L. Harris MIPS CPU 
+ * originally based on Sarah L. Harris MIPS CPU
  *                   & schoolMIPS project
- * 
- * Copyright(c) 2017-2020 Stanislav Zhelnio 
- *                        Aleksandr Romanov 
- */ 
+ *
+ * Copyright(c) 2017-2020 Stanislav Zhelnio
+ *                        Aleksandr Romanov
+ */
 
 //ALU commands
 `define ALU_ADD     3'b000
@@ -25,6 +25,8 @@
 `define RVOP_SRL    7'b0110011
 `define RVOP_SLTU   7'b0110011
 `define RVOP_SUB    7'b0110011
+`define RVOP_POP    7'b0011011
+`define RVOP_PUSH   7'b0011011
 
 // instruction funct3
 `define RVF3_ADDI   3'b000
@@ -35,6 +37,8 @@
 `define RVF3_SRL    3'b101
 `define RVF3_SLTU   3'b011
 `define RVF3_SUB    3'b000
+`define RVF3_POP    3'b000
+`define RVF3_PUSH   3'b001
 `define RVF3_ANY    3'b???
 
 // instruction funct7
@@ -43,5 +47,7 @@
 `define RVF7_SRL    7'b0000000
 `define RVF7_SLTU   7'b0000000
 `define RVF7_SUB    7'b0100000
+`define RVF7_POP    7'b0000000
+`define RVF7_PUSH   7'b0000000
 `define RVF7_ANY    7'b???????
 

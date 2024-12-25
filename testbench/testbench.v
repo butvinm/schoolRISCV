@@ -1,19 +1,19 @@
 /*
- * schoolRISCV - small RISC-V CPU 
+ * schoolRISCV - small RISC-V CPU
  *
- * originally based on Sarah L. Harris MIPS CPU 
+ * originally based on Sarah L. Harris MIPS CPU
  *                   & schoolMIPS project
- * 
- * Copyright(c) 2017-2020 Stanislav Zhelnio 
- *                        Aleksandr Romanov 
- */ 
+ *
+ * Copyright(c) 2017-2020 Stanislav Zhelnio
+ *                        Aleksandr Romanov
+ */
 
 `timescale 1 ns / 100 ps
 
 `include "sr_cpu.vh"
 
 `ifndef SIMULATION_CYCLES
-    `define SIMULATION_CYCLES 120
+    `define SIMULATION_CYCLES 60
 `endif
 
 module sm_testbench;
@@ -96,6 +96,9 @@ module sm_testbench;
             { `RVF7_SLTU, `RVF3_SLTU, `RVOP_SLTU } : $write ("sltu  $%1d, $%1d, $%1d", rd, rs1, rs2);
             { `RVF7_SUB,  `RVF3_SUB,  `RVOP_SUB  } : $write ("sub   $%1d, $%1d, $%1d", rd, rs1, rs2);
 
+            { `RVF7_POP,   `RVF3_POP,   `RVOP_POP   } : $write ("pop   $%1d", rs1);
+            { `RVF7_PUSH,  `RVF3_PUSH,  `RVOP_PUSH  } : $write ("push  $%1d", rs1);
+
             { `RVF7_ANY,  `RVF3_ADDI, `RVOP_ADDI } : $write ("addi  $%1d, $%1d, 0x%8h",rd, rs1, immI);
             { `RVF7_ANY,  `RVF3_ANY,  `RVOP_LUI  } : $write ("lui   $%1d, 0x%8h",      rd, immU);
 
@@ -111,7 +114,13 @@ module sm_testbench;
 
     always @ (posedge clk)
     begin
-        $write ("%5d  pc = %2h instr = %h   a0 = %1d", 
+        $write (
+            "read = %d | write = %d | mem: %d %d %d %d %d %d %d %d    ",
+            sm_top.lru.read, sm_top.lru.write,
+            sm_top.lru.mem[0], sm_top.lru.mem[1], sm_top.lru.mem[2], sm_top.lru.mem[3], sm_top.lru.mem[4], sm_top.lru.mem[5], sm_top.lru.mem[6], sm_top.lru.mem[7]
+        );
+
+        $write ("%5d  pc = %2h instr = %h   a0 = %1d",
                   cycle, sm_top.sm_cpu.pc, sm_top.sm_cpu.instr, sm_top.sm_cpu.rf.rf[10]);
 
         disasmInstr();
